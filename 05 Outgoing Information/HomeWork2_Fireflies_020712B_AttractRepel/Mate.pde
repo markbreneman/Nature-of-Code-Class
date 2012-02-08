@@ -11,7 +11,7 @@ class Mate{
     
 //    g=20;
     ellipseRad=random(3, 15);
-    g=ellipseRad*50;
+    g=5000;
   }
 //Function to Accept Firefly Object and determine PVector Force which is
 //returned as the attraction force in this case
@@ -27,9 +27,11 @@ class Mate{
 
 
   void display() {
-    location = new PVector(mouseX,mouseY);
-    fill(209, 40, 43); 
-    
+    location = new PVector(mouseX-20,mouseY-20);
+//    fill(209, 40, 43); 
+    noFill();
+    stroke(234, 219, 50);
+    strokeWeight(ellipseRad/5+.25);    
     if (ellipseRad > 9) {
       growShrink = 0;
     } 

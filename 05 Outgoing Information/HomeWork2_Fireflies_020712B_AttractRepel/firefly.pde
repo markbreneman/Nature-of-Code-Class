@@ -11,11 +11,12 @@ class Firefly {
     location=new PVector(random(width), random(height));
     velocity=new PVector(0, 0);
     acceleration=new PVector(random(-5,5),random(-5,5));
-    g=-ellipseRad*.15;
+    g=-ellipseRad*500;
     
   }
   //How to display the firefly
   void render() {
+    noStroke();
     fill(234, 219, 50); //Firefly Color
     ellipse(location.x, location.y, ellipseRad, ellipseRad);
     //FADE IN FADE OUT
@@ -40,12 +41,12 @@ class Firefly {
   }
   
   PVector repel(Firefly firefly){
-    PVector force = PVector.sub(location,firefly.location);             // Calculate direction of force
-    float distance = force.mag();                                 // Distance between objects
-    distance = constrain(distance,5.0,25.0);                             // Limiting the distance to eliminate "extreme" results for very close or very far objects
-    force.normalize();                                            // Normalize vector (distance doesn't matter here, we just want this vector for direction)
-    float strength = (g * ellipseRad * ellipseRad) / (distance * distance); // Calculate gravitional force magnitude
-    force.mult(strength);                                         // Get force vector --> magnitude * direction
+    PVector force = PVector.sub(location,firefly.location);            
+    float distance = force.mag();                                
+//    distance = constrain(distance,5.0,25.0);                            
+    force.normalize();                                            
+    float strength = (g * ellipseRad * ellipseRad) / (distance * distance); 
+    force.mult(strength);                                        
     return force;
   }
   //Movement Function - how to create the movement  
