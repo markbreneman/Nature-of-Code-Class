@@ -26,8 +26,6 @@ void draw() {
     else if (key == CODED && keyCode == LEFT) {
       c.cannonAngle-=1;
     }
-    for (int i=0; i<cannonball.length; i++) {
-    cannonball[i].updateLocation();}
   }
 
   //  draw the cannon balls
@@ -57,8 +55,8 @@ void keyPressed() {
   //Reloading
   else if (key == CODED && keyCode == DOWN) {
     for (int i=0; i<cannonball.length; i++) {
-      cannonball[i].location.y=random(height*2/3-70, height*2/3-15);
-      cannonball[i].location.x=random(width/2-12, width/2+12);
+      cannonball[i].location.y= 0;
+      cannonball[i].location.x=0;
       cannonball[i].velocity.mult(0);
       cannonball[i].acceleration.mult(0);
       c.launched = false;

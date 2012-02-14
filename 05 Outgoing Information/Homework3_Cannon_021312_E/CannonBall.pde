@@ -7,7 +7,7 @@ class Cannonball {
     explodeForce=10;
     topSpeed=5;
     //    damping=.9;
-    location=new PVector(random(width/2-12, width/2+12), random(height*2/3-70, height*2/3-15));
+    location=new PVector();
     velocity=new PVector(0, 0);
     acceleration=new PVector(0, 0);
   }
@@ -15,10 +15,10 @@ class Cannonball {
   void display() {
     fill(255, 0, 0);
     pushMatrix();
-    translate(location.x, location.y);
-    //    rotate(theta);
-    ellipse(0, 0, ellipseRad, ellipseRad);
-    line(0, 0, ellipseRad/2.25, ellipseRad/2.25);
+    translate(width/2, 385);
+    rotate(theta);
+    ellipse(location.x, location.y, ellipseRad, ellipseRad);
+    line(location.x, location.y,location.x+ellipseRad/2,location.y+ellipseRad/2);
     popMatrix();
   }
 
@@ -45,20 +45,20 @@ class Cannonball {
     applyForce(force);
   }
 
-  void updateLocation() {
-    pushMatrix();
-    translate(200,385);
-//    ellipse(0,0,300,3);
-    PVector ballRadius= new PVector(0,0);
-    line(ballRadius.x,ballRadius.y,location.x,location.y);
-//    ballRadius.sub(location);
-//    ellipse(ballRadius.x,ballRadius.y,10,10);
-    
-//    fill(255,0,0);
-//    ellipse(0,0,30,30);
-    popMatrix();
-//    location.x=cos(radians(c.cannonAngle)-PI/2);
-//    location.y=sin(radians(c.cannonAngle)-PI/2);
-  }
+//  void updateLocation() {
+//    pushMatrix();
+//    translate(200,385);
+////    ellipse(0,0,300,3);
+//    PVector ballRadius= new PVector(0,0);
+////    ballRadius.sub(location);
+//    line(ballRadius.x,ballRadius.y,location.x,location.y);
+////    ellipse(ballRadius.x,ballRadius.y,10,10);
+//    
+////    fill(255,0,0);
+////    ellipse(0,0,30,30);
+//    popMatrix();
+////    location.x=cos(radians(c.cannonAngle)-PI/2);
+////    location.y=sin(radians(c.cannonAngle)-PI/2);
+//  }
 }
 
