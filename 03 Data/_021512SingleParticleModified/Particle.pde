@@ -12,10 +12,11 @@ class Particle {
   float dt= 0.001;
   int noiseAmp=1;
   float n, xWind;
+  float angle;
 
   Particle(PVector l) {
-    acceleration = new PVector(0, 0.05);
-    velocity = new PVector(random(-1, 1), random(-1, 0));
+    acceleration = new PVector(0, 0.00);
+    velocity = new PVector(0, 0);
     location = l.get();
     lifespan = 400.0;
   }
@@ -44,7 +45,7 @@ class Particle {
     velocity.limit(10);
     velocity.add(acceleration);
     location.add(velocity);
-    lifespan -= 2.0;
+    lifespan -= .25;
     acceleration.mult(0);
   }
 
@@ -52,7 +53,14 @@ class Particle {
   void display() {
     stroke(0, lifespan);
     fill(0, lifespan);
-    ellipse(location.x, location.y, 8, 8);
+    angle += velocity.x;
+    pushMatrix();
+    rectMode(CENTER);
+    rect(location.x, location.y, 8, 8);
+    //    ellipse(location.x, location.y, 8, 8);
+    translate(location.x, location.y);
+    rotate(angle);
+    popMatrix();
   }
 
   // Is the particle still useful?
