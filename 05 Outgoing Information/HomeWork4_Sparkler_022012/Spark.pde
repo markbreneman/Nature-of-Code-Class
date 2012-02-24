@@ -17,7 +17,7 @@ class Spark {
     //    acceleration = new PVector(0,0);
     //    velocity = new PVector(0,0);
     location = l.get();
-    ellipseDia=5;
+    ellipseDia=random(1,5);
   }
 
   void movement() {
