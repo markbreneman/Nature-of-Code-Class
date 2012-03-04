@@ -13,7 +13,7 @@ class Particle {
     acc = new PVector(0,0.05,0);
     vel = new PVector(random(-3,3),random(-3,3));
     loc = l.get();
-    timer = 900.0;
+    timer = 255.0;
   }
 
 

@@ -11,7 +11,7 @@ class Pill {
   float circleRadius;  
   float totalPoints; 
   float breakPoint;
-  ArrayList particles;    // An arraylist for all the Bubble particles
+  ArrayList<Particle> particles;    // An arraylist for all the Bubble particles
 
     Pill(float m, float x, float y) {
     mass = m;
@@ -51,27 +51,29 @@ class Pill {
         float yt = location.y + radius * cos(theta);
         strokeWeight(1);
         fill(255, 255, 255);       
-//        ellipse(xt, yt, circleRadius, circleRadius);
-        
+        ellipse(xt, yt, circleRadius, circleRadius);//This doesn't really mean anything its just a shape over the "body" of the object
+
         // DEVELOP PARTICLES
         if (location.y == height-mass) {
           PVector particlepill= new PVector(xt, yt); // create a PVector point to xt,and yt location
-          Particle p = new Particle(particlepill); // create a new particle object at the PVector location(based of xt, and yt)
-          particles.add(p); //add that particle to the arraylist of particles
-          for (int j=0;j<particles.size();j++) {
-            println(particles.size());  
-            p.render();
-            //          ps.addParticle(p);
-            //          ps.run();
+          Particle pp = new Particle(particlepill); // create a new particle object at the PVector location(based of xt, and yt)
+          particles.add(pp); //add that particle to the arraylist of particles
+          println(particles.size());
+          Iterator<Particle> it = particles.iterator();
+          while (it.hasNext ()) {
+            Particle p = it.next();
+            p.run();
+            if (p.dead()) {
+              it.remove();
+            }
           }
         }
       }
     }
     //Coverup Pill Form
-        //    fill(255,0,0);
-        //    ellipse(location.x, location.y, mass*2, mass*2);
+    //    fill(255,0,0);
+    //    ellipse(location.x, location.y, mass*2, mass*2);
   }
-
 
 
   //Keep the Pill in the window
@@ -83,4 +85,3 @@ class Pill {
     }
   }
 }
-
