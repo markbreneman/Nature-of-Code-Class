@@ -14,6 +14,7 @@ class Boid {
   float maxforce;    // Maximum steering force
   float maxspeed;    // Maximum speed
   float periphery;
+  int test;
 
   color col;
   Boid(float x, float y) {
@@ -29,7 +30,7 @@ class Boid {
   }
 
   void run(ArrayList<Boid> boids) {
-    //flock(boids);
+//    flock(boids);
     update();
     borders();
     render();
@@ -209,41 +210,52 @@ class Boid {
     int count=0;
     float lineOfSight = 100;
     float periphery = PI/2;
-      float heading = velocity.heading2D();
+    float heading = velocity.heading2D();
+    
 
     for (Boid other : boids) {
       PVector comparison = PVector.sub(other.location, location); // A Vector Pointing from my location to the other boid
       float angle = comparison.heading2D();//PVector.angleBetween(comparison, velocity); // The angle between the pointing vector and the my velocity
       float d = PVector.dist(location, other.location);//The distance between me and the other boids 
+
       if (heading < 0) heading += TWO_PI;
       if (angle < 0) angle += TWO_PI;
       float diff = abs(heading-angle);
       if (diff < periphery/2 && d > 0 && d < lineOfSight) {
         other.highlight();
+        PVector lateralForce = new PVector(-d*cos(angle), d*sin(angle));
+        lateralForce.normalize();
+        lateralForce.div(d);
+        steer.add(lateralForce);
       }
-    }
-    
-    pushMatrix();
-    translate(location.x,location.y);
-    rotate(heading);
-    fill(0,100);
-    arc(0,0,lineOfSight*2,lineOfSight*2,-periphery/2,periphery/2);
-    popMatrix();
-    
-    
-    // As long as the vector is greater than 0
-    if (steer.mag() > 0) {
-      // Implement Reynolds: Steering = Desired - Velocity
-      steer.normalize();
-      steer.mult(maxspeed);
-      steer.sub(velocity);
-      steer.limit(maxforce);
-    }
-    return steer;
-  }
+      if ((location.x==other.location.x )&&(location.y==other.location.y)) {
+//        println("overlap!");
+//        test=test+1;
+//        println(test);
+        
+      }}
 
-  void highlight() {
-    col = color(255, 0, 0);
+      pushMatrix();
+      translate(location.x, location.y);
+      rotate(heading);
+      fill(0, 100);
+      arc(0, 0, lineOfSight*2, lineOfSight*2, -periphery/2, periphery/2);
+      popMatrix();
+
+
+      // As long as the vector is greater than 0
+      if (steer.mag() > 0) {
+        // Implement Reynolds: Steering = Desired - Velocity
+        steer.normalize();
+        steer.mult(maxspeed);
+        steer.sub(velocity);
+        steer.limit(maxforce);
+      }
+      return steer;
+    }
+
+    void highlight() {
+      col = color(255, 0, 0);
+    }
   }
-}
 
