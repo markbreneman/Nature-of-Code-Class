@@ -2,6 +2,55 @@
 // Daniel Shiffman <http://www.shiffman.net>
 // The Nature of Code, Spring 2009
 
+// Demonstration of Craig Reynolds' "Flocking" behavior
+// See: http://www.red3d.com/cwr/
+// Rules: Cohesion, Separation, Alignment
+
+// Click mouse to add boids into the system
+
+Flock flock;
+
+void setup() {
+  size(640,360);
+  flock = new Flock();
+  // Add an initial set of boids into the system
+  for (int i = 0; i < 15; i++) {
+    Boid b = new Boid(width/2+random(0,75),height/2+random(0,75));
+    flock.addBoid(b);
+  }
+  smooth();
+  boolean paused = false; 
+}
+
+void draw() {
+  background(255);
+  loop();
+  
+  if(!paused) flock.run();
+//  println(paused);
+    // Instructions
+  fill(0);
+  text("Drag the mouse to generate new boids.",10,height-16);
+}
+
+// Add a new boid into the System
+void mouseDragged() {
+  flock.addBoid(new Boid(mouseX,mouseY));
+}
+
+//void keyPressed(){
+//noLoop();
+//}
+
+ 
+void keyPressed() { 
+//     paused = !paused; 
+}
+
+// Flocking
+// Daniel Shiffman <http://www.shiffman.net>
+// The Nature of Code, Spring 2009
+
 // Boid class
 // Methods for Separation, Cohesion, Alignment added
 
@@ -209,7 +258,7 @@ class Boid {
     PVector steer = new PVector(0, 0);
     int count=0;
     float lineOfSight = 100;
-    float periphery = PI/2;
+    float periphery = PI/2+radians(10);
     float heading = velocity.heading2D();
     
 
@@ -221,9 +270,9 @@ class Boid {
       if (heading < 0) heading += TWO_PI;
       if (angle < 0) angle += TWO_PI;
       float diff = abs(heading-angle);
-      if (diff < periphery/2 && d > 0 && d < lineOfSight) {
+      if (diff < periphery/1.5 && d > 0 && d < lineOfSight) {
         other.highlight();
-        PVector lateralForce = new PVector(-d*cos(angle), d*sin(angle));
+        PVector lateralForce = new PVector(d*cos(angle), -d*sin(angle));
         lateralForce.normalize();
         lateralForce.div(d);
         steer.add(lateralForce);
@@ -258,4 +307,43 @@ class Boid {
       col = color(255, 0, 0);
     }
   }
+
+// Flocking
+// Daniel Shiffman <http://www.shiffman.net>
+// The Nature of Code, Spring 2011
+
+// Flock class
+// Does very little, simply manages the ArrayList of all the boids
+
+class Flock {
+  ArrayList<Boid> boids; // An ArrayList for all the boids
+
+  Flock() {
+    boids = new ArrayList<Boid>(); // Initialize the ArrayList
+  }
+
+  void run() {
+    
+    
+    
+    for (Boid b : boids) {
+  
+     b.col = color(175);
+    }    
+    
+    Boid b1 = boids.get(0);
+    b1.col = color(0,0,255);
+    b1.flock(boids);
+    
+    for (Boid b : boids) {
+      
+      b.run(boids);  // Passing the entire list of boids to each boid individually
+    }
+  }
+
+  void addBoid(Boid b) {
+    boids.add(b);
+  }
+
+}
 

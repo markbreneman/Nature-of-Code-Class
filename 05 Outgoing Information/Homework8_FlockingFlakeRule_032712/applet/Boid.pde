@@ -209,7 +209,7 @@ class Boid {
     PVector steer = new PVector(0, 0);
     int count=0;
     float lineOfSight = 100;
-    float periphery = PI/2;
+    float periphery = PI/2+radians(10);
     float heading = velocity.heading2D();
     
 
@@ -221,9 +221,9 @@ class Boid {
       if (heading < 0) heading += TWO_PI;
       if (angle < 0) angle += TWO_PI;
       float diff = abs(heading-angle);
-      if (diff < periphery/2 && d > 0 && d < lineOfSight) {
+      if (diff < periphery/1.5 && d > 0 && d < lineOfSight) {
         other.highlight();
-        PVector lateralForce = new PVector(-d*cos(angle), d*sin(angle));
+        PVector lateralForce = new PVector(d*cos(angle), -d*sin(angle));
         lateralForce.normalize();
         lateralForce.div(d);
         steer.add(lateralForce);

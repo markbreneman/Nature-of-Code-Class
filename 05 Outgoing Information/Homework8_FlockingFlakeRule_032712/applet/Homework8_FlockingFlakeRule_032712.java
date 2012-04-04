@@ -1,3 +1,70 @@
+import processing.core.*; 
+
+import java.applet.*; 
+import java.awt.Dimension; 
+import java.awt.Frame; 
+import java.awt.event.MouseEvent; 
+import java.awt.event.KeyEvent; 
+import java.awt.event.FocusEvent; 
+import java.awt.Image; 
+import java.io.*; 
+import java.net.*; 
+import java.text.*; 
+import java.util.*; 
+import java.util.zip.*; 
+import java.util.regex.*; 
+
+public class Homework8_FlockingFlakeRule_032712 extends PApplet {
+
+// Flocking
+// Daniel Shiffman <http://www.shiffman.net>
+// The Nature of Code, Spring 2009
+
+// Demonstration of Craig Reynolds' "Flocking" behavior
+// See: http://www.red3d.com/cwr/
+// Rules: Cohesion, Separation, Alignment
+
+// Click mouse to add boids into the system
+
+Flock flock;
+
+public void setup() {
+  size(640,360);
+  flock = new Flock();
+  // Add an initial set of boids into the system
+  for (int i = 0; i < 15; i++) {
+    Boid b = new Boid(width/2+random(0,75),height/2+random(0,75));
+    flock.addBoid(b);
+  }
+  smooth();
+  boolean paused = false; 
+}
+
+public void draw() {
+  background(255);
+  loop();
+  
+  if(!paused) flock.run();
+//  println(paused);
+    // Instructions
+  fill(0);
+  text("Drag the mouse to generate new boids.",10,height-16);
+}
+
+// Add a new boid into the System
+public void mouseDragged() {
+  flock.addBoid(new Boid(mouseX,mouseY));
+}
+
+//void keyPressed(){
+//noLoop();
+//}
+
+ 
+public void keyPressed() { 
+//     paused = !paused; 
+}
+
 // Flocking
 // Daniel Shiffman <http://www.shiffman.net>
 // The Nature of Code, Spring 2009
@@ -16,42 +83,42 @@ class Boid {
   float periphery;
   int test;
 
-  color col;
+  int col;
   Boid(float x, float y) {
     acceleration = new PVector(0, 0);
     velocity = new PVector(random(-1, 1), random(-1, 1));
     location = new PVector(x, y);
-    r = 5.0;
+    r = 5.0f;
     maxspeed = 3;
-    maxforce = 0.05;
+    maxforce = 0.05f;
     periphery=radians(60);
 
 //    col = color(175);
   }
 
-  void run(ArrayList<Boid> boids) {
+  public void run(ArrayList<Boid> boids) {
 //    flock(boids);
     update();
     borders();
     render();
   }
 
-  void applyForce(PVector force) {
+  public void applyForce(PVector force) {
     // We could add mass here if we want A = F / M
     acceleration.add(force);
   }
 
   // We accumulate a new acceleration each time based on three rules
-  void flock(ArrayList<Boid> boids) {
+  public void flock(ArrayList<Boid> boids) {
     PVector sep = separate(boids);   // Separation
     PVector ali = align(boids);      // Alignment
     PVector coh = cohesion(boids);   // Cohesion
     PVector view = view(boids);   // view
     // Arbitrarily weight these forces
-    sep.mult(1.5);
-    ali.mult(1.0);
-    coh.mult(1.0);
-    view.mult(7.0);
+    sep.mult(1.5f);
+    ali.mult(1.0f);
+    coh.mult(1.0f);
+    view.mult(7.0f);
     // Add the force vectors to acceleration
     applyForce(sep); //Turn off seperation to test View
 //        applyForce(ali);
@@ -60,7 +127,7 @@ class Boid {
   }
 
   // Method to update location
-  void update() {
+  public void update() {
     // Update velocity
     velocity.add(acceleration);
     // Limit speed
@@ -72,7 +139,7 @@ class Boid {
 
   // A method that calculates and applies a steering force towards a target
   // STEER = DESIRED MINUS VELOCITY
-  PVector seek(PVector target) {
+  public PVector seek(PVector target) {
     PVector desired = PVector.sub(target, location);  // A vector pointing from the location to the target
     // Normalize desired and scale to maximum speed
     desired.normalize();
@@ -83,7 +150,7 @@ class Boid {
     return steer;
   }
 
-  void render() {
+  public void render() {
     // Draw a triangle rotated in the direction of velocity
     float theta = velocity.heading2D() + radians(90);
     fill(col);
@@ -113,7 +180,7 @@ class Boid {
   }
 
   // Wraparound
-  void borders() {
+  public void borders() {
     if (location.x < -r) location.x = width+r;
     if (location.y < -r) location.y = height+r;
     if (location.x > width+r) location.x = -r;
@@ -122,7 +189,7 @@ class Boid {
 
   // Separation
   // Method checks for nearby boids and steers away
-  PVector separate (ArrayList<Boid> boids) {
+  public PVector separate (ArrayList<Boid> boids) {
     float desiredseparation = r;
     PVector steer = new PVector(0, 0, 0);
     int count = 0;
@@ -157,7 +224,7 @@ class Boid {
 
   // Alignment
   // For every nearby boid in the system, calculate the average velocity
-  PVector align (ArrayList<Boid> boids) {
+  public PVector align (ArrayList<Boid> boids) {
     float neighbordist = 50;
     PVector sum = new PVector(0, 0);
     int count = 0;
@@ -183,7 +250,7 @@ class Boid {
 
   // Cohesion
   // For the average location (i.e. center) of all nearby boids, calculate steering vector towards that location
-  PVector cohesion (ArrayList<Boid> boids) {
+  public PVector cohesion (ArrayList<Boid> boids) {
     float neighbordist = 50;
     PVector sum = new PVector(0, 0);   // Start with empty vector to accumulate all locations
     int count = 0;
@@ -205,11 +272,11 @@ class Boid {
 
   // View
   // move laterally away from any boid that blocks the view
-  PVector view (ArrayList<Boid> boids) {
+  public PVector view (ArrayList<Boid> boids) {
     PVector steer = new PVector(0, 0);
     int count=0;
     float lineOfSight = 100;
-    float periphery = PI/2;
+    float periphery = PI/2+radians(10);
     float heading = velocity.heading2D();
     
 
@@ -221,9 +288,9 @@ class Boid {
       if (heading < 0) heading += TWO_PI;
       if (angle < 0) angle += TWO_PI;
       float diff = abs(heading-angle);
-      if (diff < periphery/2 && d > 0 && d < lineOfSight) {
+      if (diff < periphery/1.5f && d > 0 && d < lineOfSight) {
         other.highlight();
-        PVector lateralForce = new PVector(-d*cos(angle), d*sin(angle));
+        PVector lateralForce = new PVector(d*cos(angle), -d*sin(angle));
         lateralForce.normalize();
         lateralForce.div(d);
         steer.add(lateralForce);
@@ -254,8 +321,50 @@ class Boid {
       return steer;
     }
 
-    void highlight() {
+    public void highlight() {
       col = color(255, 0, 0);
     }
   }
 
+// Flocking
+// Daniel Shiffman <http://www.shiffman.net>
+// The Nature of Code, Spring 2011
+
+// Flock class
+// Does very little, simply manages the ArrayList of all the boids
+
+class Flock {
+  ArrayList<Boid> boids; // An ArrayList for all the boids
+
+  Flock() {
+    boids = new ArrayList<Boid>(); // Initialize the ArrayList
+  }
+
+  public void run() {
+    
+    
+    
+    for (Boid b : boids) {
+  
+     b.col = color(175);
+    }    
+    
+    Boid b1 = boids.get(0);
+    b1.col = color(0,0,255);
+    b1.flock(boids);
+    
+    for (Boid b : boids) {
+      
+      b.run(boids);  // Passing the entire list of boids to each boid individually
+    }
+  }
+
+  public void addBoid(Boid b) {
+    boids.add(b);
+  }
+
+}
+  static public void main(String args[]) {
+    PApplet.main(new String[] { "--present", "--bgcolor=#666666", "--stop-color=#cccccc", "Homework8_FlockingFlakeRule_032712" });
+  }
+}
