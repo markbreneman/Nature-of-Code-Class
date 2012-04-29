@@ -14,5 +14,11 @@ class Flock {
       s.display();
     }
   }
+  
+  void run() {
+    for (Squares s : squaresarraylist) {
+//      s.update();
+        s.run(squaresarraylist);
+    }}
 }
 
