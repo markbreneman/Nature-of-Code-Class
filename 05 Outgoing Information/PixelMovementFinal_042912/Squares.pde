@@ -4,10 +4,7 @@ class Squares {
   float y;
   float h;
   float w;
-  float xx;
-  float yy;
   
-
   PVector location;
   PVector originalLocation;
   PVector velocity;
@@ -16,14 +13,13 @@ class Squares {
   float maxforce;    // Maximum steering force
   float maxspeed;    // Maximum speed
 
-    Boolean returning;
+  Boolean returning;
 
-  Squares(float tempX, float tempY, float tempXX, float tempYY, float tempW, float tempH) {
+  Squares(float tempX, float tempY, float tempW, float tempH) {
 
     x = tempX;
     y = tempY;
-    xx = tempXX;
-    yy = tempYY;
+   
     h = tempH;
     w = tempW;
     returning=false;
@@ -43,6 +39,10 @@ class Squares {
   }
 
   void update() {
+    
+    
+    
+    
     if (returning) {
       // arrive(originalLocation);  
 

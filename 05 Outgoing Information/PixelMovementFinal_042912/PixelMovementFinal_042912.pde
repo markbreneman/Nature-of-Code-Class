@@ -6,7 +6,7 @@ Timer timer;
 
 Squares[] singlesquares; //an array of Sqaure objects called singlesquares
 float[] brightnessimg1;
-float[] brightnessimg2;
+
 
 void setup() {
   size(800, 800);
@@ -18,12 +18,12 @@ void setup() {
 
   //Loads the image into memory but doesn't display it.
   img=loadImage("original.jpg");
-  img2=loadImage("testing2.jpg");
+  
 
   // define the array of square to have as many locations as the window
   singlesquares = new Squares [width*height];
   brightnessimg1=new float[width*height];
-  brightnessimg2=new float[width*height];
+  
 
   //in  rows and columns(defined by pixelblocksize) go through the array and get the pixels 
   for (y=0;  y<height; y = y+pixelblocksize) {
@@ -33,32 +33,14 @@ void setup() {
       //create a new square object of the passed in arguement sizes at the position of the loc
       // first two arguments are the x and y location 
       // and the last two arguments are the width and height
-
       float br = brightness(img.pixels[loc]); //brightness of image 1
-
-      int closestX = -1; // initialize the idea of a closest X
-      int closestY = -1; // initialize the idea of a closest Y
-      float closestB = 50000000;
-      for (int xx = 0; xx < width; xx += pixelblocksize) {
-        for (int yy = 0; yy < height; yy += pixelblocksize) {
-          int loc2 = xx + yy*width; //find the one dimensional location in the array
-          float br2 = brightness(img2.pixels[loc2]);
-          float diff = abs(br-br2);
-          if (diff < closestB) {
-            closestB = diff;
-            closestX = xx;
-            closestY = yy;
-          }
-        }
-      }
-      singlesquares[loc] = new Squares(x, y, closestX, closestY, pixelblocksize, pixelblocksize);
+      singlesquares[loc] = new Squares(x, y, pixelblocksize, pixelblocksize);
     }
   }
   timer.start();
 }
 
 void draw() {  
-  println("DRAW");
   //image(img,0,0);//displays the image
   background(0, 0, 0, .08);
 
@@ -70,21 +52,13 @@ void draw() {
       b = blue(img.pixels[loc]);
       brightnessimg1[loc]=brightness(img.pixels[loc]);
 
-      // loop through all the pixels of the other image
-      // find the one with most similar brightness
-
-
-      //brightnessimg2[loc]=brightness(img.pixels[loc]);
-
-      //sort(brightnessimg1);
-      //sort(brightnessimg2);
-
       fill (r, g, b);
       noStroke();
       singlesquares[loc].display();
       if (timer.isFinished()) { 
         //        println("is finished!");
         singlesquares[loc].update();
+        singlesquares[loc].borders();
       }
     }
   }
