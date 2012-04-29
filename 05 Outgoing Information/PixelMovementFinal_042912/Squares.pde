@@ -1,9 +1,9 @@
 class Squares {
 
-  float x;
-  float y;
-  float h;
-  float w;
+  int x;
+  int y;
+  int h;
+  int w;
   
   PVector location;
   PVector originalLocation;
@@ -15,13 +15,13 @@ class Squares {
 
   Boolean returning;
 
-  Squares(float tempX, float tempY, float tempW, float tempH) {
+  Squares(int tempX, int tempY, int tempW, int tempH) {
 
     x = tempX;
     y = tempY;
-   
     h = tempH;
     w = tempW;
+    
     returning=false;
 
     acceleration = new PVector(0, 0);
@@ -31,15 +31,22 @@ class Squares {
     originalLocation = location.get();
     maxspeed = 50;
     maxforce = 50;
-  }
-
-  void display() {
-    rect(location.x, location.y, h, w);
-//    println(returning);
-  }
-
-  void update() {
     
+  }
+
+  void display() { 
+
+      loc = x+ y*width;
+      r = red(img.pixels[loc]);
+      g = green(img.pixels[loc]);
+      b = blue(img.pixels[loc]);
+      fill(r,g,b);
+//      noStroke();
+      rect(location.x, location.y, h, w);
+
+  }
+
+  void update() {    
     
     
     
