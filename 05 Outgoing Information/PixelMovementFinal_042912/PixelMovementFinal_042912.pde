@@ -14,7 +14,7 @@ void setup() {
   timer = new Timer(timeramt);// 
 
   //Loads the image into memory but doesn't display it.
-  img=loadImage("original.png");
+  img=loadImage("original.jpg");
 
   //Create a new flock object(an arraylist of squares)
   flock= new Flock();

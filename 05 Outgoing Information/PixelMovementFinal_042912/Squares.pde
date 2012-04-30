@@ -48,7 +48,7 @@ class Squares {
   void run(ArrayList<Squares> squares){
     flock(squares);
     update();
-    borders();
+//    borders();
     display();
   }
   
@@ -86,8 +86,8 @@ class Squares {
     ali.mult(1.0);
     coh.mult(1.0);
     // Add the force vectors to acceleration
-//    applyForce(sep);
-//    applyForce(ali);
+    applyForce(sep);
+    applyForce(ali);
     applyForce(coh);
   }
   
