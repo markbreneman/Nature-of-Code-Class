@@ -9,7 +9,7 @@ void setup() {
   size(800, 800);
   smooth();
   pixelblocksize=10;
-
+  
   timeramt=2000;
   timer = new Timer(timeramt);// 
 
@@ -37,11 +37,12 @@ void draw() {
   //image(img,0,0);//displays the image
   //  background(255, 255, 255, .08);  
   background(0, 0, 0, .08);  
+    
   flock.start();
   if (timer.isFinished()) {
     flock.run();
   }
-  println(frameRate);
+//  println(frameRate);
 }
 
 //Temporarily on mousePressed calc. seeking force and apply as a steering behavior
