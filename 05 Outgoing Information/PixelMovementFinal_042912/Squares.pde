@@ -4,6 +4,7 @@ class Squares {
   int y;
   int h;
   int w;
+  float br;//this is the brightness
   
   PVector location;
   PVector originalLocation;
@@ -15,33 +16,33 @@ class Squares {
 
   Boolean returning;
 
-  Squares(int tempX, int tempY, int tempW, int tempH) {
+  Squares(int tempX, int tempY, int tempW, int tempH, float tempbr) {
 
     x = tempX;
     y = tempY;
     h = tempH;
     w = tempW;
+    br= tempbr;
     
     returning=false;
 
     acceleration = new PVector(0, 0);
     //    velocity = new PVector(random(-.25, .25), random(-.25, .25));
-    velocity = new PVector(random(-5, 5), random(-5, 5));
+    velocity = new PVector(random(-10, 10), random(-10, 10));
     location = new PVector(x, y);
     originalLocation = location.get();
-    maxspeed = 50;
-    maxforce = 50;
+    maxspeed = 10;
+    maxforce = 10;
     
   }
 
   void display() { 
-
       loc = x+ y*width;
       r = red(img.pixels[loc]);
       g = green(img.pixels[loc]);
       b = blue(img.pixels[loc]);
       fill(r,g,b);
-//      noStroke();
+      noStroke();
       rect(location.x, location.y, h, w);
   }
   
@@ -82,7 +83,7 @@ class Squares {
     PVector ali = align(squares);      // Alignment
     PVector coh = cohesion(squares);   // Cohesion
     // Arbitrarily weight these forces
-    sep.mult(1.5);
+    sep.mult(1.0);
     ali.mult(1.0);
     coh.mult(1.0);
     // Add the force vectors to acceleration
