@@ -4,10 +4,10 @@ class Flock {
   int resolution=20;
   int cols = width/resolution;     // Calculate cols & rows
   int rows = height/resolution;
-  
+
   Flock() {
     squaresarraylist = new ArrayList<Squares>(); // Initialize the ArrayList
-       
+
     // Initialize grid as 2D array of empty ArrayLists
     grid = new ArrayList[cols][rows];
     for (int i = 0; i < cols; i++) {
@@ -15,7 +15,6 @@ class Flock {
         grid[i][j] = new ArrayList<Squares>();
       }
     }
-
   }
 
   void addSquare(Squares s) {
@@ -23,7 +22,6 @@ class Flock {
     int column = int(s.x) / resolution;
     int row = int(s.y) /resolution;
     grid[column][row].add(s);
-    
   }
 
   void start() {
@@ -32,29 +30,37 @@ class Flock {
       int column = int(s.x) / resolution;
       int row = int(s.y) /resolution;
       grid[column][row].add(s);
-
     }
   }
-  
+
   void run() { 
     for (int i = 0; i < cols; i++) {
       for (int j = 0; j < rows; j++) {
-          grid[i][j].clear();
-            }
-              }
-    for (Squares s : squaresarraylist) {
-//      s.update();
-        int column = int(s.x) / resolution;
-        int row = int(s.y) /resolution;
-        grid[column][row].add(s);
-        s.run(grid[column][row]);
+        grid[i][j].clear();
+      }
     }
-//    println(squaresarraylist.size());
+    for (Squares s : squaresarraylist) {
+      //      s.update();
+      int column = int(s.x) / resolution;
+      int row = int(s.y) /resolution;
+      for (int n = -1; n <= 1; n++) {
+        for (int m = -1; m <= 1; m++) {
+          if (x+n >= 0 && x+n < cols && y+m >= 0 && y+m< rows) grid[n+column][m+row].add(s);
+        }
+      }
+    }
+
+    for (Squares s : squaresarraylist) {
+      int column = int(s.x) / resolution;
+      int row = int(s.y) /resolution;
+      s.run(grid[column][row]);
+    }
+    //    println(squaresarraylist.size());
   }
-  
-  void reset(){
-   for (Squares s : squaresarraylist) {
-        s.startingposition();
+
+  void reset() {
+    for (Squares s : squaresarraylist) {
+      s.startingposition();
     }
   }
 }

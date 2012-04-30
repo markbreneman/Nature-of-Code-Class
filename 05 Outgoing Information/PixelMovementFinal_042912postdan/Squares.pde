@@ -15,7 +15,7 @@ class Squares {
   float maxspeed;    // Maximum speed
 
   Boolean returning;
-
+  
   Squares(int tempX, int tempY, int tempW, int tempH, float tempbr) {
 
     x = tempX;
@@ -31,23 +31,24 @@ class Squares {
     velocity = new PVector(random(-10, 10), random(-10, 10));
     location = new PVector(x, y);
     originalLocation = location.get();
-    maxspeed = 10;
-    maxforce = 10;
+    maxspeed = 4;
+    maxforce = 0.1;
     
   }
 
   void display() { 
       loc = x+ y*width;
-      r = red(img.pixels[loc]);
-      g = green(img.pixels[loc]);
-      b = blue(img.pixels[loc]);
-      fill(r,g,b);
+      float r = red(img.pixels[loc]);
+      float g = green(img.pixels[loc]);
+      float b = blue(img.pixels[loc]);
+      float a = alpha(img.pixels[loc]);
+      fill(r,g,b,a);
       noStroke();
       rect(location.x, location.y, h, w);
   }
   
   void run(ArrayList<Squares> squares){
-    flock(squares);
+    //flock(squares);
     update();
 //    borders();
     display();

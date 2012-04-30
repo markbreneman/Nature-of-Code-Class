@@ -4,7 +4,7 @@ class Squares {
   int y;
   int h;
   int w;
-  float br;//this is the brightness
+  
   
   PVector location;
   PVector originalLocation;
@@ -13,35 +13,36 @@ class Squares {
   float r;
   float maxforce;    // Maximum steering force
   float maxspeed;    // Maximum speed
+  float br;//brighntess
 
   Boolean returning;
-
-  Squares(int tempX, int tempY, int tempW, int tempH, float tempbr) {
+  
+  Squares(int tempX, int tempY, int tempW, int tempH) {
 
     x = tempX;
     y = tempY;
     h = tempH;
     w = tempW;
-    br= tempbr;
     
     returning=false;
 
     acceleration = new PVector(0, 0);
-    //    velocity = new PVector(random(-.25, .25), random(-.25, .25));
     velocity = new PVector(random(-10, 10), random(-10, 10));
     location = new PVector(x, y);
     originalLocation = location.get();
-    maxspeed = 10;
-    maxforce = 10;
+    maxspeed = 4;
+    maxforce = 0.1;
     
   }
 
   void display() { 
       loc = x+ y*width;
-      r = red(img.pixels[loc]);
-      g = green(img.pixels[loc]);
-      b = blue(img.pixels[loc]);
-      fill(r,g,b);
+      br = brightness(img.pixels[loc]);
+      float r = red(img.pixels[loc]);
+      float g = green(img.pixels[loc]);
+      float b = blue(img.pixels[loc]);
+      float a = alpha(img.pixels[loc]);
+      fill(r,g,b,a);
       noStroke();
       rect(location.x, location.y, h, w);
   }
@@ -105,9 +106,9 @@ class Squares {
     ali.mult(1.0);
     coh.mult(1.0);
     // Add the force vectors to acceleration
-//    applyForce(sep);
+    applyForce(sep);
     applyForce(ali);
-//    applyForce(coh);
+    applyForce(coh);
   }
   
   // Separation
@@ -208,7 +209,8 @@ class Squares {
   }
   
   void startingposition(){
-  returning = true; 
+  returning =! returning;
+  velocity = new PVector(random(-10, 10), random(-10, 10)); 
   }
 }
 
