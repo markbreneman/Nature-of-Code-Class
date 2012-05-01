@@ -14,7 +14,7 @@ void setup() {
   timer = new Timer(timeramt);// 
 
   //Loads the image into memory but doesn't display it.
-  img=loadImage("original.png");
+  img=loadImage("Image01.png");
 
   //Create a new flock object(an arraylist of squares)
   flock= new Flock();
@@ -42,9 +42,9 @@ void draw() {
   if (timer.isFinished()) {
     flock.run();
   }
-  println(frameRate);
-  
-  saveFrame("render/render####.png");
+//  println(frameRate);
+//  
+//  saveFrame("render/render####.png");
 }
 
 //Temporarily on mousePressed calc. seeking force and apply as a steering behavior

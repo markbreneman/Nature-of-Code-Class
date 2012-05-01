@@ -4,6 +4,7 @@ class Flock {
   int resolution=10;
   int cols = width/resolution;     // Calculate cols & rows
   int rows = height/resolution;
+  boolean go =false;
 
   Flock() {
     squaresarraylist = new ArrayList<Squares>(); // Initialize the ArrayList
@@ -43,6 +44,7 @@ class Flock {
       //      s.update();
       int column = int(s.x) / resolution;
       int row = int(s.y) /resolution;
+      grid[column][row].add(s);
       for (int n = -1; n <= 1; n++) {
         for (int m = -1; m <= 1; m++) {
           if (x+n >= 0 && x+n < cols && y+m >= 0 && y+m< rows) grid[n+column][m+row].add(s);
@@ -55,7 +57,6 @@ class Flock {
       int row = int(s.y) /resolution;
       s.run(grid[column][row]);
     }
-    //    println(squaresarraylist.size());
   }
 
   void reset() {

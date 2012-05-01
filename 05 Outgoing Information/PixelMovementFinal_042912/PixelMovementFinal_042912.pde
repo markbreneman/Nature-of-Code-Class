@@ -42,7 +42,7 @@ void draw() {
   if (timer.isFinished()) {
     flock.run();
   }
-  println(frameRate);
+//  println(frameRate);
 }
 
 //Temporarily on mousePressed calc. seeking force and apply as a steering behavior

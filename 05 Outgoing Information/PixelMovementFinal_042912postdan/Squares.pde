@@ -157,6 +157,7 @@ class Squares {
     for (Squares other : squares) {
       float d = PVector.dist(location,other.location);
       float brdiff=abs(br-other.br);
+      println(brdiff);
       if ((d > 0) && (d < neighbordist) && (brdiff<brthreshold)) {
         sum.add(other.velocity);
         count++;

@@ -1,11 +1,6 @@
 class Squares {
 
-  int x;
-  int y;
-  int h;
-  int w;
-  
-  
+  int x, y, w, h;
   PVector location;
   PVector originalLocation;
   PVector velocity;
@@ -13,51 +8,78 @@ class Squares {
   float r;
   float maxforce;    // Maximum steering force
   float maxspeed;    // Maximum speed
-  float br;//brighntess
+  float br, hu, sat;//brightness, hue, saturation
 
   Boolean returning;
-  
+  Boolean athome;
+
   Squares(int tempX, int tempY, int tempW, int tempH) {
 
     x = tempX;
     y = tempY;
     h = tempH;
     w = tempW;
-    
+
     returning=false;
 
     acceleration = new PVector(0, 0);
     velocity = new PVector(random(-10, 10), random(-10, 10));
     location = new PVector(x, y);
     originalLocation = location.get();
-    maxspeed = 4;
-    maxforce = 0.1;
-    
+    maxspeed = 7;
+    maxforce = 1;
   }
 
   void display() { 
-      loc = x+ y*width;
-      br = brightness(img.pixels[loc]);
-      float r = red(img.pixels[loc]);
-      float g = green(img.pixels[loc]);
-      float b = blue(img.pixels[loc]);
-      float a = alpha(img.pixels[loc]);
-      fill(r,g,b,a);
-      noStroke();
-      rect(location.x, location.y, h, w);
+    loc = x+ y*width;
+    hu=hue(img.pixels[loc]);
+    sat=saturation(img.pixels[loc]);
+    br = brightness(img.pixels[loc]);
+    float r = red(img.pixels[loc]);
+    float g = green(img.pixels[loc]);
+    float b = blue(img.pixels[loc]);
+    float a = alpha(img.pixels[loc]);
+    fill(r, g, b, a);
+    noStroke();
+    rect(location.x, location.y, h, w);
   }
-  
-  void run(ArrayList<Squares> squares){
-    flock(squares);
-    update();
-//    borders();
-    display();
+
+  void run(ArrayList<Squares> squares) {
+    athome();
+
+    if ((returning==false)&&(athome==false)) {
+      flock(squares);
+      update();
+      borders();
+      display();
+    }
+    else if ((returning==false)&&(athome==true)) {
+      for (Squares other : squares) {
+        velocity = new PVector(random(-10, 10), random(-10, 10));
+        update();
+        borders();
+        display();
+      }
+    }
+    else if (returning==true) {
+      update();
+      borders();
+      display();
+    }
   }
-  
+
+  void athome() {
+    if ( (location.x==originalLocation.x) &&(location.y==originalLocation.y)) {
+      athome=true;
+    }
+    else { 
+      athome=false;
+    }
+  }
 
   void update() {
-     
-      if (returning) {
+
+    if (returning) {
       // arrive(originalLocation);  
       //A vector pointing from current location to the original
       PVector desired=PVector.sub(originalLocation, location);
@@ -73,14 +95,14 @@ class Squares {
       steer.limit(maxforce);  // Limit to maximum steering force
       applyForce(steer);
     }
-    
-      // Update velocity
-      velocity.add(acceleration);
-      // Limit speed
-      velocity.limit(maxspeed);
-      location.add(velocity);
-      // Reset accelertion to 0 each cycle
-      acceleration.mult(0);
+
+    // Update velocity
+    velocity.add(acceleration);
+    // Limit speed
+    velocity.limit(maxspeed);
+    location.add(velocity);
+    // Reset accelertion to 0 each cycle
+    acceleration.mult(0);
   }
 
   void applyForce(PVector force) {
@@ -95,8 +117,8 @@ class Squares {
     if (location.x > width+r) location.x = -r;
     if (location.y > height+r) location.y = -r;
   }
-  
-   // We accumulate a new acceleration each time based on three rules
+
+  // We accumulate a new acceleration each time based on three rules
   void flock(ArrayList<Squares> squares) {
     PVector sep = separate(squares);   // Separation
     PVector ali = align(squares);      // Alignment
@@ -104,26 +126,26 @@ class Squares {
     // Arbitrarily weight these forces
     sep.mult(1.0);
     ali.mult(1.0);
-    coh.mult(1.0);
+    coh.mult(2.0);
     // Add the force vectors to acceleration
-    applyForce(sep);
-    applyForce(ali);
+    //    applyForce(sep);
+    //    applyForce(ali);
     applyForce(coh);
   }
-  
+
   // Separation
   // Method checks for nearby boids and steers away
   PVector separate (ArrayList<Squares> squares) {
     float desiredseparation =30;
-    PVector steer = new PVector(0,0,0);
+    PVector steer = new PVector(0, 0, 0);
     int count = 0;
     // For every boid in the system, check if it's too close
     for (Squares other : squares) {
-      float d = PVector.dist(location,other.location);
+      float d = PVector.dist(location, other.location);
       // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
       if ((d > 0) && (d < desiredseparation)) {
         // Calculate vector pointing away from neighbor
-        PVector diff = PVector.sub(location,other.location);
+        PVector diff = PVector.sub(location, other.location);
         diff.normalize();
         diff.div(d);        // Weight by distance
         steer.add(diff);
@@ -150,14 +172,12 @@ class Squares {
   // For every nearby boid in the system, calculate the average velocity
   PVector align (ArrayList<Squares> squares) {
     float neighbordist = 50;
-    float brthreshold=30;
-    PVector sum = new PVector(0,0);
+    PVector sum = new PVector(0, 0);
     int count = 0;
 
     for (Squares other : squares) {
-      float d = PVector.dist(location,other.location);
-      float brdiff=abs(br-other.br);
-      if ((d > 0) && (d < neighbordist) && (brdiff<brthreshold)) {
+      float d = PVector.dist(location, other.location);
+      if ((d > 0) && (d <neighbordist)) {
         sum.add(other.velocity);
         count++;
       }
@@ -166,11 +186,12 @@ class Squares {
       sum.div((float)count);
       sum.normalize();
       sum.mult(maxspeed);
-      PVector steer = PVector.sub(sum,velocity);
+      PVector steer = PVector.sub(sum, velocity);
       steer.limit(maxforce);
       return steer;
-    } else {
-      return new PVector(0,0);
+    } 
+    else {
+      return new PVector(0, 0);
     }
   }
 
@@ -178,11 +199,14 @@ class Squares {
   // For the average location (i.e. center) of all nearby boids, calculate steering vector towards that location
   PVector cohesion (ArrayList<Squares> squares) {
     float neighbordist = 50;
-    PVector sum = new PVector(0,0);   // Start with empty vector to accumulate all locations
+    float huthreshold=50;
+    PVector sum = new PVector(0, 0);   // Start with empty vector to accumulate all locations
     int count = 0;
     for (Squares other : squares) {
-      float d = PVector.dist(location,other.location);
-      if ((d > 0) && (d < neighbordist)) {
+      float d = PVector.dist(location, other.location);
+      float huediff=abs(hu-other.hu);
+
+      if ((d > 0) && (huediff < huthreshold)) {
         sum.add(other.location); // Add location
         count++;
       }
@@ -190,27 +214,27 @@ class Squares {
     if (count > 0) {
       sum.div(count);
       return seek(sum);  // Steer towards the location
-    } else {
-      return new PVector(0,0);
+    } 
+    else {
+      return new PVector(0, 0);
     }
   }
-  
-    // A method that calculates and applies a steering force towards a target
+
+  // A method that calculates and applies a steering force towards a target
   // STEER = DESIRED MINUS VELOCITY
   PVector seek(PVector target) {
-    PVector desired = PVector.sub(target,location);  // A vector pointing from the location to the target
+    PVector desired = PVector.sub(target, location);  // A vector pointing from the location to the target
     // Normalize desired and scale to maximum speed
     desired.normalize();
     desired.mult(maxspeed);
     // Steering = Desired minus Velocity
-    PVector steer = PVector.sub(desired,velocity);
+    PVector steer = PVector.sub(desired, velocity);
     steer.limit(maxforce);  // Limit to maximum steering force
     return steer;
   }
-  
-  void startingposition(){
-  returning =! returning;
-  velocity = new PVector(random(-10, 10), random(-10, 10)); 
+
+  void startingposition() {
+    returning =! returning;
   }
 }
 
